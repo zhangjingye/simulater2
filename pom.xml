@@ -55,6 +55,20 @@
             <version>${swagger-parser.version}</version>
         </dependency>
 
+        <!-- Swagger 2.0 Models -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.6.11</version>
+        </dependency>
+
+        <!-- Swagger 2.0 Parser -->
+        <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>2.1.16</version>
+        </dependency>
+
         <!-- Hutool工具类 -->
         <dependency>
             <groupId>cn.hutool</groupId>

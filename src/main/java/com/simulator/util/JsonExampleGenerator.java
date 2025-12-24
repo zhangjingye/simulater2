@@ -103,6 +103,16 @@ public class JsonExampleGenerator {
         String schemaName = schema.getName();
         log.debug("处理Schema: type={}, name={}, depth={}", schemaType, schemaName, depth);
 
+        // 处理组合Schema（ComposedSchema）：oneOf, anyOf, allOf
+        if (schema instanceof ComposedSchema) {
+            ComposedSchema composedSchema = (ComposedSchema) schema;
+            log.debug("识别为ComposedSchema，oneOf数量: {}, anyOf数量: {}, allOf数量: {}", 
+                composedSchema.getOneOf() != null ? composedSchema.getOneOf().size() : 0,
+                composedSchema.getAnyOf() != null ? composedSchema.getAnyOf().size() : 0,
+                composedSchema.getAllOf() != null ? composedSchema.getAllOf().size() : 0);
+            return generateComposedExample(composedSchema, depth, openAPI);
+        }
+        
         // 对于对象类型，总是生成完整的对象结构，忽略Schema的example（因为example可能是简单字符串）
         // 这样可以确保生成完整的嵌套对象结构
         if (schema instanceof ObjectSchema) {
@@ -185,6 +195,49 @@ public class JsonExampleGenerator {
 
         log.warn("无法识别Schema类型: {}, 返回默认值", schemaType);
         return "example";
+    }
+
+    /**
+     * 生成组合Schema示例（oneOf, anyOf, allOf）
+     */
+    private static Object generateComposedExample(ComposedSchema composedSchema, int depth, OpenAPI openAPI) {
+        // 优先处理 allOf：合并所有子Schema的属性
+        if (composedSchema.getAllOf() != null && !composedSchema.getAllOf().isEmpty()) {
+            log.debug("处理allOf组合，子Schema数量: {}", composedSchema.getAllOf().size());
+            Map<String, Object> mergedExample = new LinkedHashMap<>();
+            
+            // 合并所有allOf子Schema的属性
+            for (Schema subSchema : composedSchema.getAllOf()) {
+                Object subExample = generateExampleObject(subSchema, depth + 1, openAPI);
+                if (subExample instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> subMap = (Map<String, Object>) subExample;
+                    mergedExample.putAll(subMap);
+                } else if (subExample != null) {
+                    // 如果子Schema不是对象，记录警告
+                    log.warn("allOf中的子Schema生成的不是对象类型，跳过合并");
+                }
+            }
+            
+            return mergedExample.isEmpty() ? Collections.emptyMap() : mergedExample;
+        }
+        
+        // 处理 oneOf：使用第一个子Schema生成示例
+        if (composedSchema.getOneOf() != null && !composedSchema.getOneOf().isEmpty()) {
+            log.debug("处理oneOf组合，子Schema数量: {}，使用第一个", composedSchema.getOneOf().size());
+            Schema firstSchema = composedSchema.getOneOf().get(0);
+            return generateExampleObject(firstSchema, depth + 1, openAPI);
+        }
+        
+        // 处理 anyOf：使用第一个子Schema生成示例
+        if (composedSchema.getAnyOf() != null && !composedSchema.getAnyOf().isEmpty()) {
+            log.debug("处理anyOf组合，子Schema数量: {}，使用第一个", composedSchema.getAnyOf().size());
+            Schema firstSchema = composedSchema.getAnyOf().get(0);
+            return generateExampleObject(firstSchema, depth + 1, openAPI);
+        }
+        
+        log.warn("ComposedSchema没有包含任何子Schema（oneOf/anyOf/allOf）");
+        return Collections.emptyMap();
     }
 
     /**
