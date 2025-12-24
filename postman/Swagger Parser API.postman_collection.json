@@ -1,0 +1,504 @@
+{
+	"info": {
+		"_postman_id": "swagger-parser-api-collection",
+		"name": "Swagger Parser API",
+		"description": "Swagger解析器API接口集合，包含导入、查询等所有接口",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "导入Swagger文档",
+			"item": [
+				{
+					"name": "导入Swagger文档（JSON内容）",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"{\\\"openapi\\\":\\\"3.0.0\\\",\\\"info\\\":{\\\"title\\\":\\\"测试API\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"servers\\\":[{\\\"url\\\":\\\"http://localhost:8080\\\"}],\\\"paths\\\":{\\\"/api/users\\\":{\\\"get\\\":{\\\"summary\\\":\\\"获取用户列表\\\",\\\"operationId\\\":\\\"getUsers\\\",\\\"parameters\\\":[{\\\"name\\\":\\\"page\\\",\\\"in\\\":\\\"query\\\",\\\"schema\\\":{\\\"type\\\":\\\"integer\\\",\\\"example\\\":1}}],\\\"responses\\\":{\\\"200\\\":{\\\"description\\\":\\\"成功\\\",\\\"content\\\":{\\\"application/json\\\":{\\\"schema\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"data\\\":{\\\"type\\\":\\\"array\\\",\\\"items\\\":{\\\"type\\\":\\\"object\\\",\\\"properties\\\":{\\\"id\\\":{\\\"type\\\":\\\"integer\\\"},\\\"name\\\":{\\\"type\\\":\\\"string\\\"}}}}}}}}}}}}}\",\n  \"contentType\": \"json\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/swagger/import",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"import"
+							]
+						},
+						"description": "通过JSON内容导入Swagger文档"
+					},
+					"response": []
+				},
+				{
+					"name": "导入Swagger文档（通过URL）",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"url\": \"https://petstore.swagger.io/v2/swagger.json\",\n  \"contentType\": \"json\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/swagger/import",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"import"
+							]
+						},
+						"description": "通过URL导入Swagger文档，系统会自动从URL获取内容"
+					},
+					"response": []
+				},
+				{
+					"name": "导入Swagger文档（YAML内容）",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"openapi: 3.0.0\\ninfo:\\n  title: 测试API\\n  version: 1.0.0\\nservers:\\n  - url: http://localhost:8080\\npaths:\\n  /api/users:\\n    get:\\n      summary: 获取用户列表\\n      operationId: getUsers\\n      parameters:\\n        - name: page\\n          in: query\\n          schema:\\n            type: integer\\n            example: 1\\n      responses:\\n        '200':\\n          description: 成功\\n          content:\\n            application/json:\\n              schema:\\n                type: object\\n                properties:\\n                  data:\\n                    type: array\\n                    items:\\n                      type: object\\n                      properties:\\n                        id:\\n                          type: integer\\n                        name:\\n                          type: string\",\n  \"contentType\": \"yaml\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/swagger/import",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"import"
+							]
+						},
+						"description": "通过YAML内容导入Swagger文档"
+					},
+					"response": []
+				},
+				{
+					"name": "导入Swagger文档（文件上传）",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "上传Swagger文档文件，支持.json、.yaml、.yml格式"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/swagger/import/file",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"import",
+								"file"
+							]
+						},
+						"description": "通过文件上传导入Swagger文档，支持.json、.yaml、.yml格式的文件。在Postman中选择Body -> form-data -> file类型，然后选择文件。"
+					},
+					"response": []
+				}
+			],
+			"description": "导入Swagger2或OpenAPI3格式的接口文档"
+		},
+		{
+			"name": "查询接口",
+			"item": [
+				{
+					"name": "查询接口列表（全部）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis?page=0&size=10&sortBy=createTime&sortDir=DESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "页码（从0开始）"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "每页大小"
+								},
+								{
+									"key": "sortBy",
+									"value": "createTime",
+									"description": "排序字段"
+								},
+								{
+									"key": "sortDir",
+									"value": "DESC",
+									"description": "排序方向（ASC/DESC）"
+								}
+							]
+						},
+						"description": "查询所有接口列表，支持分页和排序"
+					},
+					"response": []
+				},
+				{
+					"name": "查询接口列表（按路径）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis?path=/api/users&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis"
+							],
+							"query": [
+								{
+									"key": "path",
+									"value": "/api/users",
+									"description": "接口路径（模糊查询）"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "根据路径模糊查询接口列表"
+					},
+					"response": []
+				},
+				{
+					"name": "查询接口列表（按方法）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis?method=GET&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis"
+							],
+							"query": [
+								{
+									"key": "method",
+									"value": "GET",
+									"description": "请求方法（GET/POST/PUT/DELETE等）"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "根据请求方法查询接口列表"
+					},
+					"response": []
+				},
+				{
+					"name": "查询接口列表（按标签）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis?tags=用户管理&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis"
+							],
+							"query": [
+								{
+									"key": "tags",
+									"value": "用户管理",
+									"description": "接口标签"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "根据标签查询接口列表"
+					},
+					"response": []
+				},
+				{
+					"name": "获取接口详情",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis/{{apiId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis",
+								"{{apiId}}"
+							],
+							"variable": [
+								{
+									"key": "apiId",
+									"value": "1",
+									"description": "接口ID"
+								}
+							]
+						},
+						"description": "根据接口ID获取完整的接口详情，包括请求参数、响应参数、头部信息等"
+					},
+					"response": []
+				}
+			],
+			"description": "查询接口相关操作"
+		},
+		{
+			"name": "请求参数",
+			"item": [
+				{
+					"name": "查询所有请求参数",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis/{{apiId}}/request-params",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis",
+								"{{apiId}}",
+								"request-params"
+							],
+							"variable": [
+								{
+									"key": "apiId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "查询指定接口的所有请求参数"
+					},
+					"response": []
+				},
+				{
+					"name": "查询请求参数（按位置）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis/{{apiId}}/request-params?location=query",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis",
+								"{{apiId}}",
+								"request-params"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "query",
+									"description": "参数位置（path/header/query/form/body）"
+								}
+							],
+							"variable": [
+								{
+									"key": "apiId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "根据参数位置查询请求参数，支持path/header/query/form/body"
+					},
+					"response": []
+				},
+				{
+					"name": "查询请求参数（按类型）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis/{{apiId}}/request-params/type?paramType=String",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis",
+								"{{apiId}}",
+								"request-params",
+								"type"
+							],
+							"query": [
+								{
+									"key": "paramType",
+									"value": "String",
+									"description": "参数类型（String/Number/Boolean/Array/Object等）"
+								}
+							],
+							"variable": [
+								{
+									"key": "apiId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "根据参数类型查询请求参数"
+					},
+					"response": []
+				}
+			],
+			"description": "查询接口的请求参数"
+		},
+		{
+			"name": "响应参数",
+			"item": [
+				{
+					"name": "查询所有响应参数",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis/{{apiId}}/response-params",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis",
+								"{{apiId}}",
+								"response-params"
+							],
+							"variable": [
+								{
+									"key": "apiId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "查询指定接口的所有响应参数"
+					},
+					"response": []
+				},
+				{
+					"name": "查询响应参数（按状态码）",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger/apis/{{apiId}}/response-params?statusCode=200",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger",
+								"apis",
+								"{{apiId}}",
+								"response-params"
+							],
+							"query": [
+								{
+									"key": "statusCode",
+									"value": "200",
+									"description": "HTTP状态码（200/400/500等）"
+								}
+							],
+							"variable": [
+								{
+									"key": "apiId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "根据HTTP状态码查询响应参数"
+					},
+					"response": []
+				}
+			],
+			"description": "查询接口的响应参数"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "apiId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
+
